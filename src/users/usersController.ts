@@ -9,15 +9,23 @@ import {
   Security,
   SuccessResponse,
 } from "tsoa";
-import { ContactFormParams, User, UserData } from "./user";
+import {
+  ContactFormParams,
+  User,
+  UserCreationSuccessResponse,
+  UserData,
+} from "./user";
 import { UsersService, UserCreationParams } from "./usersService";
+import { getDBConnection } from "../db/dbSetup";
 
 @Route("users")
 export class UsersController extends Controller {
   usersService: UsersService;
   constructor() {
     super();
-    this.usersService = new UsersService();
+    const db = getDBConnection();
+    const usersCollectionRef = db.collection("users");
+    this.usersService = new UsersService(usersCollectionRef);
   }
 
   @Security("jwt")
@@ -29,7 +37,7 @@ export class UsersController extends Controller {
     return this.usersService.get(userId, name);
   }
 
-  @Get("search")
+  @Get("/")
   public async searchUser(@Query() val: string): Promise<Array<UserData>> {
     console.log("query string: " + val);
     return this.usersService.search(val);
@@ -48,7 +56,7 @@ export class UsersController extends Controller {
   @Post()
   public async createUser(
     @Body() requestBody: UserCreationParams
-  ): Promise<User> {
+  ): Promise<UserCreationSuccessResponse> {
     this.setStatus(201); // set return status 201
     return this.usersService.create(requestBody);
   }

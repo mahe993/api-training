@@ -5,3 +5,4 @@ firebase-debug.log
 yarn.lock
 *.log
 .DS_Store
+service-account-file.json

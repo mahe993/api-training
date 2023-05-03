@@ -1,11 +1,19 @@
-// src/users/usersService.ts
-import { ContactFormParams, fakeUserData } from "./user";
+import {
+  ContactFormParams,
+  UserCreationSuccessResponse,
+  fakeUserData,
+} from "./user";
 import { User } from "./user";
+import { CollectionReference } from "@google-cloud/firestore";
 
 // A post request should not contain an id.
 export type UserCreationParams = Pick<User, "email" | "name" | "phoneNumbers">;
 
 export class UsersService {
+  collection: CollectionReference;
+  constructor(collection: CollectionReference) {
+    this.collection = collection;
+  }
   public get(id: number, name?: string): User {
     return {
       id,
@@ -43,11 +51,20 @@ export class UsersService {
     }
   }
 
-  public create(userCreationParams: UserCreationParams): User {
-    return {
-      id: Math.floor(Math.random() * 10000), // Random
-      status: "Happy",
-      ...userCreationParams,
-    };
+  public async create(
+    userCreationParams: UserCreationParams
+  ): Promise<UserCreationSuccessResponse | never> {
+    // add to collections(user) here
+    try {
+      console.log("i am here");
+      const { name } = userCreationParams;
+      const docRef = this.collection.doc(name);
+      await docRef.set({ status: "happy", ...userCreationParams });
+      return {
+        message: `User ${name} successfully added to users collection!`,
+      };
+    } catch (err) {
+      throw new Error();
+    }
   }
 }

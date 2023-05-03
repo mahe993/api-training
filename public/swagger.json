@@ -77,6 +77,18 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UserCreationSuccessResponse": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Pick_User.email-or-name-or-phoneNumbers_": {
 				"properties": {
 					"email": {
@@ -133,7 +145,7 @@
 				"parameters": []
 			}
 		},
-		"/maps/eta/{currentLocation;:destination}": {
+		"/maps/eta/{currentLocation-:destination}": {
 			"get": {
 				"operationId": "GetEta",
 				"responses": {
@@ -211,7 +223,7 @@
 				]
 			}
 		},
-		"/users/search": {
+		"/users": {
 			"get": {
 				"operationId": "SearchUser",
 				"responses": {
@@ -240,6 +252,33 @@
 						}
 					}
 				]
+			},
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserCreationSuccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreationParams"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/users/contact": {
@@ -265,35 +304,6 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/ContactFormParams"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/users": {
-			"post": {
-				"operationId": "CreateUser",
-				"responses": {
-					"201": {
-						"description": "Created",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/User"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UserCreationParams"
 							}
 						}
 					}

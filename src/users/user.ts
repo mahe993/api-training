@@ -21,6 +21,10 @@ export interface ContactFormParams {
   message: string;
 }
 
+export interface UserCreationSuccessResponse {
+  message: string;
+}
+
 export const fakeUserData: FakeUserData = {
   fakeUUID1: {
     name: "Ma He",
