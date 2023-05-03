@@ -21,7 +21,7 @@ export class UsersController extends Controller {
   }
 
   @Security("jwt")
-  @Get("user{userId}")
+  @Get("user:userId")
   public async getUser(
     @Path() userId: number,
     @Query() name?: string

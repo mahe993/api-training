@@ -1,6 +1,6 @@
 import { MapsServices } from "./maps";
 import { MapsServiceFactory } from "./vendors/MapServiceFactory";
-import { CURRENT_MAP_VENDOR, MapVendors, mapVendors } from "./vendors/vendors";
+import { MapVendors } from "./vendors/vendors";
 
 export class MapsService {
   vendor: MapsServices;

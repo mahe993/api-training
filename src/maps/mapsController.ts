@@ -10,7 +10,7 @@ export class MapsController extends Controller {
     this.mapsService = new MapsService(MapVendors.mapBox);
   }
 
-  @Get("eta/:currentLocation;:destination")
+  @Get("eta/:currentLocation-:destination")
   public async getEta(
     @Path() currentLocation: string,
     @Path() destination: string
