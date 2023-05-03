@@ -1,4 +1,4 @@
-import { MapsServices } from "src/maps/maps";
+import { MapsServices } from "../../maps";
 
 export class GoogleMapsService implements MapsServices {
   public async getEtaInSeconds(

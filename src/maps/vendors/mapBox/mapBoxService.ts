@@ -3,7 +3,7 @@ import mbxDirections, {
 } from "@mapbox/mapbox-sdk/services/directions";
 import { Coordinates } from "@mapbox/mapbox-sdk/lib/classes/mapi-request";
 import { MapBoxServiceProfiles } from "./mapBox";
-import { MapsServices } from "src/maps/maps";
+import { MapsServices } from "../../maps";
 
 export class MapBoxService implements MapsServices {
   directionsClient: DirectionsService;

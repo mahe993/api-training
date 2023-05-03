@@ -6,7 +6,7 @@ export class MapsService {
   vendor: MapsServices;
   constructor(config: MapVendors) {
     // this method is hackish and only available to javascript
-    // this.vendor = new mapVendors["config"](); s
+    // this.vendor = new mapVendors["config"]();
     const mapsFactory = new MapsServiceFactory();
     this.vendor = mapsFactory.getVendor(config);
   }
