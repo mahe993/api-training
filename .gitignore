@@ -1,0 +1,7 @@
+*.env
+node_modules/
+dist/
+firebase-debug.log
+yarn.lock
+*.log
+.DS_Store
