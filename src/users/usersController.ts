@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Path,
   Post,
@@ -26,13 +27,16 @@ export class UsersController extends Controller {
     this.usersService = new UsersService();
   }
 
-  // Get specific user (test for firestore)
+  // Get specific user
   @Security("jwt")
   @Get("specific/{userName}")
   public async getUser(@Path() userName: string): Promise<Array<User>> {
     return this.usersService.getSpecific(userName);
   }
 
+  // get all users
+  // <optional> filter by status
+  // <optional> sort by name
   @Get("all")
   public async getUsers(
     @Query() sort?: "asc" | "desc",
@@ -41,12 +45,31 @@ export class UsersController extends Controller {
     return this.usersService.getAll(sort, status);
   }
 
+  // update status of a user
   @Put("status/{userName}")
   public async updateUserStatus(
     @Path() userName: string,
     @Body() reqBody: { status: "happy" | "sad" }
   ): Promise<UserQuerySuccessResponse> {
     return this.usersService.updateStatus(userName, reqBody.status);
+  }
+
+  // Create new user
+  @SuccessResponse("201", "Created") // Custom success response
+  @Post()
+  public async createUser(
+    @Body() requestBody: UserCreationParams
+  ): Promise<UserQuerySuccessResponse> {
+    this.setStatus(201); // set return status 201
+    return this.usersService.create(requestBody);
+  }
+
+  // Delete specific user
+  @Delete("{userName}")
+  public async deleteUser(
+    @Path() userName: string
+  ): Promise<UserQuerySuccessResponse> {
+    return this.usersService.deleteUser(userName);
   }
 
   // Search user (for app endpoint)
@@ -64,15 +87,5 @@ export class UsersController extends Controller {
   ): Promise<ContactFormParams> {
     this.setStatus(201); // set return status 201
     return this.usersService.contact(contactFormParams);
-  }
-
-  // Create new user (test for firestore)
-  @SuccessResponse("201", "Created") // Custom success response
-  @Post()
-  public async createUser(
-    @Body() requestBody: UserCreationParams
-  ): Promise<UserQuerySuccessResponse> {
-    this.setStatus(201); // set return status 201
-    return this.usersService.create(requestBody);
   }
 }

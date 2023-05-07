@@ -70,6 +70,14 @@ export class UsersService {
     return res;
   }
 
+  // delete user doc
+  public async deleteUser(name: string): Promise<UserQuerySuccessResponse> {
+    const userRef = this.collection.doc(name);
+    const delOperation = await userRef.delete();
+    console.log(delOperation);
+    return { message: `User ${name} deleted from database!` };
+  }
+
   public search(query: string) {
     const regexp = new RegExp(query, "i");
 
