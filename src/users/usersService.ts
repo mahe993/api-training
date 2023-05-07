@@ -32,6 +32,18 @@ export class UsersService {
     return res;
   }
 
+  // update status of specific user
+  public async updateStatus(
+    name: string,
+    status: "happy" | "sad"
+  ): Promise<UserQuerySuccessResponse | never> {
+    const userRef = this.collection.doc(name);
+    const update = await userRef.update({ status: status });
+    console.log(update);
+
+    return { message: `User ${name}'s status successfully updated!` };
+  }
+
   // get all users
   // filter by status <optional>
   // sorted by name <optional>

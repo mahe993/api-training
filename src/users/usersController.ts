@@ -4,6 +4,7 @@ import {
   Get,
   Path,
   Post,
+  Put,
   Query,
   Route,
   Security,
@@ -38,6 +39,14 @@ export class UsersController extends Controller {
     @Query() status?: "happy" | "sad"
   ): Promise<Array<User>> {
     return this.usersService.getAll(sort, status);
+  }
+
+  @Put("status/{userName}")
+  public async updateUserStatus(
+    @Path() userName: string,
+    @Body() reqBody: { status: "happy" | "sad" }
+  ): Promise<UserQuerySuccessResponse> {
+    return this.usersService.updateStatus(userName, reqBody.status);
   }
 
   // Search user (for app endpoint)

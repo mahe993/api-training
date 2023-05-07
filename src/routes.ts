@@ -27,6 +27,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserQuerySuccessResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserData": {
         "dataType": "refObject",
         "properties": {
@@ -41,14 +49,6 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UserQuerySuccessResponse": {
-        "dataType": "refObject",
-        "properties": {
             "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -170,6 +170,32 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getUsers.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/users/status/:userName',
+            ...(fetchMiddlewares<RequestHandler>(UsersController)),
+            ...(fetchMiddlewares<RequestHandler>(UsersController.prototype.updateUserStatus)),
+
+            function UsersController_updateUserStatus(request: any, response: any, next: any) {
+            const args = {
+                    userName: {"in":"path","name":"userName","required":true,"dataType":"string"},
+                    reqBody: {"in":"body","name":"reqBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["happy"]},{"dataType":"enum","enums":["sad"]}],"required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new UsersController();
+
+
+              const promise = controller.updateUserStatus.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
