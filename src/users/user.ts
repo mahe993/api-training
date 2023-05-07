@@ -1,5 +1,4 @@
 export interface User {
-  id: number;
   email: string;
   name: string;
   status?: "Happy" | "Sad";
@@ -21,7 +20,7 @@ export interface ContactFormParams {
   message: string;
 }
 
-export interface UserCreationSuccessResponse {
+export interface UserQuerySuccessResponse {
   message: string;
 }
 

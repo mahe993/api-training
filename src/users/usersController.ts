@@ -12,37 +12,42 @@ import {
 import {
   ContactFormParams,
   User,
-  UserCreationSuccessResponse,
+  UserQuerySuccessResponse,
   UserData,
 } from "./user";
 import { UsersService, UserCreationParams } from "./usersService";
-import { getDBConnection } from "../db/dbSetup";
 
 @Route("users")
 export class UsersController extends Controller {
   usersService: UsersService;
   constructor() {
     super();
-    const db = getDBConnection();
-    const usersCollectionRef = db.collection("users");
-    this.usersService = new UsersService(usersCollectionRef);
+    this.usersService = new UsersService();
   }
 
+  // Get specific user (test for firestore)
   @Security("jwt")
-  @Get("user:userId")
-  public async getUser(
-    @Path() userId: number,
-    @Query() name?: string
-  ): Promise<User> {
-    return this.usersService.get(userId, name);
+  @Get("specific/{userName}")
+  public async getUser(@Path() userName: string): Promise<Array<User>> {
+    return this.usersService.getSpecific(userName);
   }
 
+  @Get("all")
+  public async getUsers(
+    @Query() sort?: "asc" | "desc",
+    @Query() status?: "happy" | "sad"
+  ): Promise<Array<User>> {
+    return this.usersService.getAll(sort, status);
+  }
+
+  // Search user (for app endpoint)
   @Get("/")
   public async searchUser(@Query() val: string): Promise<Array<UserData>> {
     console.log("query string: " + val);
     return this.usersService.search(val);
   }
 
+  // Contact us form (app endpoint)
   @SuccessResponse("201", "Created contact form") // Custom success response
   @Post("contact")
   public async contactUs(
@@ -52,11 +57,12 @@ export class UsersController extends Controller {
     return this.usersService.contact(contactFormParams);
   }
 
+  // Create new user (test for firestore)
   @SuccessResponse("201", "Created") // Custom success response
   @Post()
   public async createUser(
     @Body() requestBody: UserCreationParams
-  ): Promise<UserCreationSuccessResponse> {
+  ): Promise<UserQuerySuccessResponse> {
     this.setStatus(201); // set return status 201
     return this.usersService.create(requestBody);
   }

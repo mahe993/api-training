@@ -1,5 +1,5 @@
 import { MapsServices } from "./maps";
-import { MapsServiceFactory } from "./vendors/MapServiceFactory";
+import { MapsServiceFactory } from "./vendors/mapServiceFactory";
 import { MapVendors } from "./vendors/vendors";
 
 export class MapsService {
