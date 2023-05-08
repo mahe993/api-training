@@ -48,7 +48,7 @@ export class UsersService {
   // filter by status <optional>
   // sorted by name <optional>
   public async getAll(
-    sort?: "asc" | "desc",
+    sort: "asc" | "desc" = "asc",
     status?: "happy" | "sad"
   ): Promise<Array<User>> {
     let data: Query<FirebaseFirestore.DocumentData> = this.collection;
@@ -57,14 +57,14 @@ export class UsersService {
     if (!!status) {
       data = data.where("status", "==", status);
     }
-    if (!!sort) {
-      data = data.orderBy("name", sort);
-    }
+
+    data = data.orderBy("name", sort);
 
     // get documents
     const snapshot = await data.get();
 
     // parse document data
+    // Abstract out this part so we do not always have to do it. add in doc.id as one of the fields
     const res: Array<User> = snapshot.docs.map((doc) => doc.data() as User);
 
     return res;
