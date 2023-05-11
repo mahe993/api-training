@@ -28,7 +28,7 @@ export class UsersController extends Controller {
   }
 
   // Get specific user
-  @Security("jwt")
+  @Security("firebase")
   @Get("specific/{userName}")
   public async getUser(@Path() userName: string): Promise<Array<User>> {
     return this.usersService.getSpecific(userName);
@@ -37,6 +37,7 @@ export class UsersController extends Controller {
   // get all users
   // <optional> filter by status
   // <optional> sort by name
+  @Security("firebase")
   @Get("all")
   public async getUsers(
     @Query() sort?: "asc" | "desc",
@@ -55,6 +56,7 @@ export class UsersController extends Controller {
   }
 
   // Create new user
+  @Security("firebase")
   @SuccessResponse("201", "Created") // Custom success response
   @Post()
   public async createUser(

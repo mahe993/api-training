@@ -8,10 +8,6 @@
 		"schemas": {
 			"User": {
 				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
 					"email": {
 						"type": "string"
 					},
@@ -25,34 +21,66 @@
 							"Sad"
 						]
 					},
-					"phoneNumbers": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
+					"phoneNumber": {
+						"type": "string"
 					}
 				},
 				"required": [
-					"id",
 					"email",
 					"name",
-					"phoneNumbers"
+					"status",
+					"phoneNumber"
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"UserQuerySuccessResponse": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_User.email-or-name-or-phoneNumber_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"phoneNumber": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"name",
+					"phoneNumber"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"UserCreationParams": {
+				"$ref": "#/components/schemas/Pick_User.email-or-name-or-phoneNumber_"
 			},
 			"UserData": {
 				"properties": {
 					"name": {
 						"type": "string"
 					},
-					"team": {
+					"status": {
 						"type": "string"
 					}
 				},
 				"required": [
 					"name",
-					"team"
+					"status"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -76,44 +104,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"UserCreationSuccessResponse": {
-				"properties": {
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Pick_User.email-or-name-or-phoneNumbers_": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"phoneNumbers": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"email",
-					"name",
-					"phoneNumbers"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"UserCreationParams": {
-				"$ref": "#/components/schemas/Pick_User.email-or-name-or-phoneNumbers_"
 			}
 		},
 		"securitySchemes": {}
@@ -182,7 +172,7 @@
 				]
 			}
 		},
-		"/users/user{userId}": {
+		"/users/specific/{userName}": {
 			"get": {
 				"operationId": "GetUser",
 				"responses": {
@@ -191,7 +181,10 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"type": "array"
 								}
 							}
 						}
@@ -199,23 +192,14 @@
 				},
 				"security": [
 					{
-						"jwt": []
+						"firebase": []
 					}
 				],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "userId",
+						"name": "userName",
 						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "name",
-						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -223,7 +207,139 @@
 				]
 			}
 		},
+		"/users/all": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"firebase": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"happy",
+								"sad"
+							]
+						}
+					}
+				]
+			}
+		},
+		"/users/status/{userName}": {
+			"put": {
+				"operationId": "UpdateUserStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserQuerySuccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userName",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"status": {
+										"type": "string",
+										"enum": [
+											"happy",
+											"sad"
+										]
+									}
+								},
+								"required": [
+									"status"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/users": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserQuerySuccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"firebase": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreationParams"
+							}
+						}
+					}
+				}
+			},
 			"get": {
 				"operationId": "SearchUser",
 				"responses": {
@@ -252,33 +368,34 @@
 						}
 					}
 				]
-			},
-			"post": {
-				"operationId": "CreateUser",
+			}
+		},
+		"/users/{userName}": {
+			"delete": {
+				"operationId": "DeleteUser",
 				"responses": {
-					"201": {
-						"description": "Created",
+					"200": {
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UserCreationSuccessResponse"
+									"$ref": "#/components/schemas/UserQuerySuccessResponse"
 								}
 							}
 						}
 					}
 				},
 				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UserCreationParams"
-							}
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userName",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
-				}
+				]
 			}
 		},
 		"/users/contact": {

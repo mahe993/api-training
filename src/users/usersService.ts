@@ -8,7 +8,7 @@ import { User } from "./user";
 import { CollectionReference, Query } from "@google-cloud/firestore";
 
 // A post request should not contain an id.
-export type UserCreationParams = Pick<User, "email" | "name" | "phoneNumbers">;
+export type UserCreationParams = Pick<User, "email" | "name" | "phoneNumber">;
 
 export class UsersService {
   collection: CollectionReference;
@@ -111,8 +111,7 @@ export class UsersService {
     // add to collections(user) here
     try {
       const { name } = userCreationParams;
-      const docRef = this.collection.doc(name);
-      await docRef.set({ status: "happy", ...userCreationParams });
+      await this.collection.add({ status: "happy", ...userCreationParams });
       return {
         message: `User ${name} successfully added to users collection!`,
       };

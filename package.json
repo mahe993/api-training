@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "export GOOGLE_APPLICATION_CREDENTIALS='./service-account-file.json' && nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "dev": "tsoa routes && tsoa spec && export GOOGLE_APPLICATION_CREDENTIALS='./service-account-file.json' && nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "tsoa:routes": "tsoa routes",
     "tsoa:spec": "tsoa spec"
   },

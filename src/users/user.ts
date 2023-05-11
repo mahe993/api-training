@@ -1,13 +1,13 @@
 export interface User {
   email: string;
   name: string;
-  status?: "Happy" | "Sad";
-  phoneNumbers: string[];
+  status: "Happy" | "Sad";
+  phoneNumber: string;
 }
 
 export interface UserData {
   name: string;
-  team: string;
+  status: string;
 }
 
 export interface FakeUserData {
@@ -27,34 +27,34 @@ export interface UserQuerySuccessResponse {
 export const fakeUserData: FakeUserData = {
   fakeUUID1: {
     name: "Ma He",
-    team: "Janitor",
+    status: "Janitor",
   },
   fakeUUID2: {
     name: "Mudassir",
-    team: "Board",
+    status: "Board",
   },
   fakeUUID3: {
     name: "Danish",
-    team: "CEO",
+    status: "CEO",
   },
   fakeUUID4: {
     name: "Irfan",
-    team: "afternoon dev",
+    status: "afternoon dev",
   },
   fakeUUID5: {
     name: "Abia",
-    team: "BE",
+    status: "BE",
   },
   fakeUUID6: {
     name: "Ridzwan",
-    team: "FE",
+    status: "FE",
   },
   fakeUUID7: {
     name: "Nouman",
-    team: "FE",
+    status: "FE",
   },
   fakeUUID8: {
     name: "Faizan",
-    team: "FE",
+    status: "FE",
   },
 };

@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import admin from "firebase-admin";
 
 interface AuthenticatedRequest extends Request {
-  user: JwtPayload | string;
+  user: admin.auth.DecodedIdToken; // is this correct?
 }
+
+const appAdmin = admin.initializeApp();
 
 export async function expressAuthentication(
   req: AuthenticatedRequest,
@@ -22,7 +24,7 @@ export async function expressAuthentication(
     return Promise.reject(new Error("scheme is not bearer"));
   }
   try {
-    const decoded: JwtPayload | string = jwt.verify(token, "SECRET_KEY");
+    const decoded = await appAdmin.auth().verifyIdToken(token);
     req.user = decoded;
 
     console.log("authorized!...");

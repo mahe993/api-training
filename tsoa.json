@@ -7,7 +7,7 @@
     "specVersion": 3,
     "securityDefinitions": {},
     "securitySchemes": {
-      "jwt": {
+      "firebase": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
